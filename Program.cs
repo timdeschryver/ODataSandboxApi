@@ -6,12 +6,16 @@ using Microsoft.OData.ModelBuilder;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddControllers()
-    .AddOData(options => options.EnableQueryFeatures().AddRouteComponents("orest", GetEdmModel()));
+    .AddOData(options =>
+    {
+        options.EnableQueryFeatures().AddRouteComponents("orest", GetEdmModel());
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<SandboxContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SandboxDB")));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
@@ -36,6 +40,7 @@ app.Run();
 static IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();
+    builder.EnableLowerCamelCase();
     builder.EntitySet<Student>("Students");
     return builder.GetEdmModel();
 }

@@ -5,19 +5,17 @@ using Microsoft.AspNetCore.OData.Query;
 [Route("[controller]")]
 public class StudentsController : ControllerBase
 {
-    private readonly ILogger<StudentsController> _logger;
     private readonly SandboxContext _context;
 
-    public StudentsController(ILogger<StudentsController> logger, SandboxContext context)
+    public StudentsController(SandboxContext context)
     {
-        _logger = logger;
         _context = context;
     }
 
     [HttpGet]
     [EnableQuery]
-    public IQueryable<Student> Get()
+    public ActionResult<IQueryable<Student>> Get()
     {
-        return _context.Students;
+        return Ok(_context.Students);
     }
 }
